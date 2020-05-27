@@ -3,10 +3,11 @@
 // 3.把接口挂在到路由对象上
 // 4.到出路由对象
 const path = require('path');
-const db = require(path.join(__dirname, '../utils', 'db.js'));
+const db = require(path.join(__dirname, '../utils/db.js'));
 // 加密模块
 const utility = require('utility');
 const express = require('express');
+const jsonwebtoken = require('jsonwebtoken');
 const router = express.Router();
 //------------------写接口----------------------
 
@@ -35,4 +36,34 @@ router.post('/reguser', async (req, res) => {
         })
     }
 });
+
+//登录
+router.post('/login', async (req, res) => {
+    // 通过req.body 获取用户输入的账号密码
+    let username = req.body.username;
+    let password = utility.md5(req.body.password);
+    // 判断账号密码是否正确
+    let r = await db('select * from user where username=? and password=?', [username, password]);
+    // console.log(r);
+    // 生成token  把用户保存的数据，放到了req.user的变量上
+    if (r && r.length > 0) {
+        res.send({
+            status: 0,
+            message: '登录成功',
+            token: 'Bearer ' + jsonwebtoken.sign({
+                    username: req.body.username,
+                    id: r[0].id,
+                    // 保存用户id 用于查看用户信息
+                },
+                'bigevent', {
+                    expiresIn: '2 days'
+                })
+        });
+    } else {
+        res.send({
+            status: 1,
+            message: '登录失败'
+        });
+    }
+})
 module.exports = router;
