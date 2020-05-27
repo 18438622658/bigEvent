@@ -41,6 +41,7 @@ router.post('/reguser', async (req, res) => {
 router.post('/login', async (req, res) => {
     // 通过req.body 获取用户输入的账号密码
     let username = req.body.username;
+    //将密码加密以后再去匹配
     let password = utility.md5(req.body.password);
     // 判断账号密码是否正确
     let r = await db('select * from user where username=? and password=?', [username, password]);
