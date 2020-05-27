@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 
-app.listen(3000, () => {
+app.listen(3007, () => {
     console.log('大事件启动')
 })
 
@@ -14,7 +14,7 @@ app.use(express.urlencoded({
 }));
 
 // --------------------加载路由模块--------------
-app.use('/api', require(__dirname, 'routers', 'login'));
-app.use('/my/article', require(__dirname, 'routers', 'category'));
-app.use('/my/article', require(__dirname, 'routers', 'article'));
-app.use('/my', require(__dirname, 'routers', 'user'));
+app.use('/api', require(path.join(__dirname, 'routers', 'login')));
+app.use('/my/article', require(path.join(__dirname, 'routers', 'category')));
+app.use('/my/article', require(path.join(__dirname, 'routers', 'article')));
+app.use('/my', require(path.join(__dirname, 'routers', 'user')));
